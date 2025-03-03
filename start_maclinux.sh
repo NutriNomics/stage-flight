@@ -14,20 +14,21 @@ fi
 source "$VENV_DIR/bin/activate"
 
 # Upgrade pip (optional but recommended)
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip --quiet
 
 # Install requirements if requirements.txt exists
 if [ ! -f "requirements.txt" ]; then
     echo "Downloading staging"
-    pip install tomli
-    pip install requests
-    pip install pyzipper
-    python updater.py --check
+    pip install tomli --quiet
+    pip install requests --quiet
+    pip install pyzipper --quiet
 fi
+
+python updater.py --check
 
 if [ -f "requirements.txt" ]; then
     echo "Installing dependencies..."
-    pip install -r requirements.txt
+    pip install -r requirements.txt --quiet
     echo "Update finished!"
 fi
 
