@@ -22,8 +22,7 @@ if [ ! -f "requirements.txt" ]; then
     pip install tomli
     pip install requests
     pip install pyzipper
-    python staging.py
-    rm staging.py
+    python updater.py --check
 fi
 
 if [ -f "requirements.txt" ]; then
