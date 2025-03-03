@@ -1,3 +1,4 @@
+import argparse
 import os
 import re
 import shutil
@@ -171,7 +172,7 @@ class Updater:
         latest_version, download_url = self._get_latest_version()
 
         if latest_version and latest_version != current_version:
-            print(f"New version available: {latest_version} (Current: {current_version})")
+            print(f"New version available: {latest_version} (Current version: {current_version})")
             zip_path = self._download_update(download_url)
 
             if zip_path:
@@ -181,7 +182,7 @@ class Updater:
             else:
                 print("Update failed. Please try again.")
         else:
-            print("You're using the latest version.")
+            print(f"You're using the latest version. (Current version: {current_version})")
 
     def _get_latest_version(self):
         """Fetch the latest release version from GitHub."""
@@ -212,5 +213,23 @@ class Updater:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Updater CLI tool")
+
+    parser.add_argument("-c", "--check", action="store_true", help="Check for updates and apply if available")
+    parser.add_argument("-z", "--zip", action="store_true", help="Create an update ZIP")
+    parser.add_argument("-r", "--restart", action="store_true", help="Restart the application")
+    parser.add_argument("-b", "--bump", choices=["major", "minor", "patch"], default="patch",
+                        help="Specify version bump type for creating an update ZIP (default: patch)")
+
+    args = parser.parse_args()
+
     updater = Updater()
-    updater.check_for_updates()
+
+    if args.check:
+        updater.check_for_updates()
+
+    if args.zip:
+        updater.create_update_zip(bump=args.bump)
+
+    if args.restart:
+        updater.restart_cli()
